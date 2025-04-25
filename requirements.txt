@@ -1,0 +1,6 @@
+transformers>=4.37.0
+torch>=2.0.0
+graphviz>=0.17.0
+accelerate>=0.25.0
+sentencepiece>=0.1.99
+einops>=0.7.0 
