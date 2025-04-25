@@ -117,11 +117,11 @@ The library produces two types of visualizations:
 
 ### PDF Visualization (via Graphviz)
 
-![Example PDF Visualization](https://via.placeholder.com/650x400?text=Example+PDF+Visualization)
+![Example PDF Visualization](outputs/example.png)
 
 ### Interactive HTML Visualization (via vis.js)
 
-![Example HTML Visualization](https://via.placeholder.com/650x400?text=Example+HTML+Visualization)
+See outputs folder
 
 ## Node Information
 
