@@ -30,9 +30,16 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16, device_map="auto")
     
     # Option 2 (commented out): Load from local checkpoint
-    # local_path = "/path/to/your/local/qwen2.5-7b-instruct"
-    # tokenizer = AutoTokenizer.from_pretrained(local_path)
-    # model = AutoModelForCausalLM.from_pretrained(local_path, torch_dtype=torch.float16, device_map="auto")
+    checkpoint_path = "/mnt/home/brendan/tmp_big_exps/DeepSeekRL-Extended/big_single_run/checkpoint_400/model.pt"
+    
+    # First initialize the tokenizer and model architecture
+    tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct")
+    model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct", torch_dtype=torch.float16, device_map="auto")
+    
+    # Then load the weights from checkpoint
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    model.load_state_dict(checkpoint, strict=False)
+    print(f"Loaded checkpoint from {checkpoint_path}")
     
     # Define how many completions to generate
     num_completions = 20
@@ -103,6 +110,12 @@ def main():
     for i in range(num_completions):
         # Extract completion tokens (skip the prompt tokens)
         new_tokens = outputs[i][prompt_length:]
+        
+        # Remove padding tokens (EOS tokens) from the end of the sequence
+        # Find the index of the first EOS token if present
+        if tokenizer.eos_token_id in new_tokens:
+            eos_idx = new_tokens.tolist().index(tokenizer.eos_token_id)
+            new_tokens = new_tokens[:eos_idx]
         
         # Store tokens and decoded text
         completions_tokens.append(new_tokens.tolist())
